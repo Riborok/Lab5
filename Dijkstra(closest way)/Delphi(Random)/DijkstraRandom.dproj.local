@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.366,C:\Users\Egor\Desktop\ОАиП\Lab5\Dijkstra (closest way)\Delphi(Input)\Dijkstra.dproj=C:\Users\Egor\Desktop\ОАиП\Lab5\DFS\Delphi(Input)\DFS.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.371,C:\Users\Egor\Desktop\ОАиП\Lab5\Dijkstra(closest way)\Delphi(Input)\Dijkstra.dproj=C:\Users\Egor\Desktop\ОАиП\Lab5\Dijkstra(closest way)\Delphi(Random)\DijkstraRandom.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.036,C:\Users\Egor\Desktop\ОАиП\Lab5\DFS\Delphi\DFS.dproj=C:\Users\Egor\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
