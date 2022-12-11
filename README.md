@@ -1030,11 +1030,9 @@ End.
 
 ![Algorithm scheme using the second variant Part2](https://i.imgur.com/ORimm8F.png)
 
-![Algorithm scheme using the second variant Part3](https://i.imgur.com/TfycZH5.png)
+![Algorithm scheme using the second variant Part3](https://i.imgur.com/TyB0xJh.png)
 
-![Algorithm scheme using the second variant Part4](https://i.imgur.com/rQ3gRTg.png)
-
-![Algorithm scheme using the second variant Part5](https://i.imgur.com/HuxhNmt.png)
+![Algorithm scheme using the second variant Part4](https://i.imgur.com/2xzCa4d.png)
 
 ### Code using the second variant (maze entry):
 ``` pascal
@@ -1058,16 +1056,18 @@ Const
   //MaxSizes - maximum allowable sizes in a labyrinth
 
 Var
-  Lab, Way : array [1..MaxSizes, 1..MaxSizes] of Byte;
-  StartI, StartJ, SizeI, SizeJ, CurrNumStep : Byte;
+  Lab : array [1..MaxSizes, 1..MaxSizes] of Byte;
+  ExitCoords : array [1..(sqr(MaxSizes) div 2), 1..2] of Byte;
+  StartI, StartJ, SizeI, SizeJ, CurrNumStep, k : Byte;
   flag, IsPathFound : Boolean;
   //Lab - an array that stores the entered labyrinth
-  //Way - an array that stores path to the exit
+  //ExitCoords - an array which stores exit coordinates
   //StartI - start coordinates by lines
   //StartJ - start coordinates by columns
   //SizeI - entered size by lines
   //SizeJ - entered size by columns
   //CurrNumStep - current number step in the Way
+  //k - cycle counter
   //flag - flag to confirm the correctness of entering numbers
   //IsPathFound - indicator of whether the path is found
 
@@ -1220,44 +1220,15 @@ end;
 
 
 
-//Procedure to writing the path
-procedure PathOutput(CoordI, CoordJ: Byte);
-var
-  PrevNumStep: Byte;
-  //PrevNumStep - previous number step in the Way
-begin
-
-  //Find the previous number step in the Way
-  //to find previous coordinates in the path
-  PrevNumStep:= Way[CoordI, CoordJ] - 1;
-
-  //Looking for a path to the starting cell
-  if (CoordI <> StartI) or (CoordJ <> StartJ) then
-  begin
-    if Way[CoordI, CoordJ-1] = PrevNumStep then
-      PathOutput(CoordI, CoordJ-1)
-    else if Way[CoordI-1, CoordJ] = PrevNumStep then
-      PathOutput(CoordI-1, CoordJ)
-    else if Way[CoordI, CoordJ+1] = PrevNumStep then
-      PathOutput(CoordI, CoordJ+1)
-    else if Way[CoordI+1, CoordJ] = PrevNumStep then
-      PathOutput(CoordI+1, CoordJ);
-  end;
-
-  //Write coordinates
-  Write('(',Convert[CoordI],',',Convert[CoordJ],') ');
-
-end;
-
-
-
 //Procedure for finding a path
 procedure FindExitDFS(CoordI, CoordJ: Byte);
 begin
 
-  //Increase CurrNumStep and add it to the array Way at the current coordinates
+  //Increase CurrNumStep and mark the passed cell and add the coordinates to ExitCoords
   Inc(CurrNumStep);
-  Way[CoordI,CoordJ]:= CurrNumStep;
+  Lab[CoordI,CoordJ]:= 1;
+  ExitCoords[CurrNumStep, 1]:= CoordI;
+  ExitCoords[CurrNumStep, 2]:= CoordJ;
 
   //Сhecking for an exit
   if (CoordI = 1) or (CoordJ = 1) or (CoordI = SizeI) or (CoordJ = SizeJ) then
@@ -1267,8 +1238,10 @@ begin
     //Output how many steps was found the exit
     Writeln('Number of steps:',CurrNumStep);
 
-    //Turn to the procedure PathOutput to writing the path
-    PathOutput(CoordI, CoordJ);
+    //Writing the path
+    for k := 1 to CurrNumStep do
+      Write('(',Convert[ExitCoords[k, 1]],',',Convert[ExitCoords[k, 2]],') ');
+
     Writeln;
 
     //The way is found
@@ -1279,20 +1252,20 @@ begin
   //And if found, go into it
   else
   begin
-    if (Lab[CoordI, CoordJ+1] = 0) and (Way[CoordI, CoordJ+1] = 0) then
+    if Lab[CoordI, CoordJ+1] = 0 then
       FindExitDFS(CoordI, CoordJ+1);
-    if (Lab[CoordI+1, CoordJ] = 0) and (Way[CoordI+1, CoordJ] = 0) then
+    if Lab[CoordI+1, CoordJ] = 0 then
       FindExitDFS(CoordI+1, CoordJ);
-    if (Lab[CoordI, CoordJ-1] = 0) and (Way[CoordI, CoordJ-1] = 0) then
+    if Lab[CoordI, CoordJ-1] = 0 then
       FindExitDFS(CoordI, CoordJ-1);
-    if (Lab[CoordI-1, CoordJ] = 0) and (Way[CoordI-1, CoordJ] = 0) then
+    if Lab[CoordI-1, CoordJ] = 0 then
       FindExitDFS(CoordI-1, CoordJ);
   end;
 
   //Next, decrease Dec, reset the current coordinates in the Way
   //and exit the current cell to the previous
   Dec(CurrNumStep);
-  Way[CoordI,CoordJ]:= 0;
+  Lab[CoordI,CoordJ]:= 0;
 
 end;
 
@@ -1344,15 +1317,17 @@ Const
   //MaxSizes - maximum allowable sizes in a labyrinth
 
 Var
-  Lab, Way : array [1..MaxSizes, 1..MaxSizes] of Byte;
-  StartI, StartJ, SizeI, SizeJ, CurrNumStep : Byte;
+  Lab: array [1..MaxSizes, 1..MaxSizes] of Byte;
+  ExitCoords : array [1..(sqr(MaxSizes) div 2), 1..2] of Byte;
+  StartI, StartJ, SizeI, SizeJ, CurrNumStep, k : Byte;
   //Lab - an array that stores the entered labyrinth
-  //Way - an array that stores path to the exit
+  //ExitCoords - an array which stores exit coordinates
   //StartI - start coordinates by lines
   //StartJ - start coordinates by columns
   //SizeI - entered size by lines
   //SizeJ - entered size by columns
   //CurrNumStep - current number step in the Way
+  //k - cycle counter
 
 
 
@@ -1767,44 +1742,15 @@ end;
 
 
 
-//Procedure to writing the path
-procedure PathOutput(CoordI, CoordJ: Byte);
-var
-  PrevNumStep: Byte;
-  //PrevNumStep - previous number step in the Way
-begin
-
-  //Find the previous number step in the Way
-  //to find previous coordinates in the path
-  PrevNumStep:= Way[CoordI, CoordJ] - 1;
-
-  //Looking for a path to the starting cell
-  if (CoordI <> StartI) or (CoordJ <> StartJ) then
-  begin
-    if Way[CoordI, CoordJ-1] = PrevNumStep then
-      PathOutput(CoordI, CoordJ-1)
-    else if Way[CoordI-1, CoordJ] = PrevNumStep then
-      PathOutput(CoordI-1, CoordJ)
-    else if Way[CoordI, CoordJ+1] = PrevNumStep then
-      PathOutput(CoordI, CoordJ+1)
-    else if Way[CoordI+1, CoordJ] = PrevNumStep then
-      PathOutput(CoordI+1, CoordJ);
-  end;
-
-  //Write coordinates
-  Write('(',Convert[CoordI],',',Convert[CoordJ],') ');
-
-end;
-
-
-
 //Procedure for finding a path
 procedure FindExitDFS(CoordI, CoordJ: Byte);
 begin
 
-  //Increase CurrNumStep and add it to the array Way at the current coordinates
+  //Increase CurrNumStep and mark the passed cell and add the coordinates to ExitCoords
   Inc(CurrNumStep);
-  Way[CoordI,CoordJ]:= CurrNumStep;
+  Lab[CoordI,CoordJ]:= 1;
+  ExitCoords[CurrNumStep, 1]:= CoordI;
+  ExitCoords[CurrNumStep, 2]:= CoordJ;
 
   //Сhecking for an exit
   if (CoordI = 1) or (CoordJ = 1) or (CoordI = SizeI) or (CoordJ = SizeJ) then
@@ -1814,30 +1760,31 @@ begin
     //Output how many steps was found the exit
     Writeln('Number of steps:',CurrNumStep);
 
-    //Turn to the procedure PathOutput to writing the path
-    PathOutput(CoordI, CoordJ);
-    Writeln;
+    //Writing the path
+    for k := 1 to CurrNumStep do
+      Write('(',Convert[ExitCoords[k, 1]],',',Convert[ExitCoords[k, 2]],') ');
 
+    Writeln;
   end
 
   //Else looking for an neighboring, available and untraveled cell.
   //And if found, go into it
   else
   begin
-    if (Lab[CoordI, CoordJ+1] = 0) and (Way[CoordI, CoordJ+1] = 0) then
+    if Lab[CoordI, CoordJ+1] = 0 then
       FindExitDFS(CoordI, CoordJ+1);
-    if (Lab[CoordI+1, CoordJ] = 0) and (Way[CoordI+1, CoordJ] = 0) then
+    if Lab[CoordI+1, CoordJ] = 0 then
       FindExitDFS(CoordI+1, CoordJ);
-    if (Lab[CoordI, CoordJ-1] = 0) and (Way[CoordI, CoordJ-1] = 0) then
+    if Lab[CoordI, CoordJ-1] = 0 then
       FindExitDFS(CoordI, CoordJ-1);
-    if (Lab[CoordI-1, CoordJ] = 0) and (Way[CoordI-1, CoordJ] = 0) then
+    if Lab[CoordI-1, CoordJ] = 0 then
       FindExitDFS(CoordI-1, CoordJ);
   end;
 
   //Next, decrease Dec, reset the current coordinates in the Way
   //and exit the current cell to the previous
   Dec(CurrNumStep);
-  Way[CoordI,CoordJ]:= 0;
+  Lab[CoordI,CoordJ]:= 0;
 
 end;
 
