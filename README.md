@@ -28,7 +28,7 @@
 ---
 ### Algorithm scheme the first variant (maze entry)
 
-![Algorithm scheme using the first variant Part1](https://i.imgur.com/zHYBacB.png)
+![Algorithm schеme using the first variant Part1](https://i.imgur.com/zHYBacB.png)
 
 ![Algorithm scheme using the first variant Part2](https://i.imgur.com/cFgRC1I.png)
 
